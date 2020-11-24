@@ -1,51 +1,71 @@
 import re
-from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication
 import requests 
 from bs4 import BeautifulSoup
 import time
 import sqlite3 as sql
 import datetime
-from tensorflow.keras.datasets import boston_housing
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
 from numpy import asarray
-from numpy import savetxt
 import os
 import tensorflow as tf
-from sklearn.datasets import load_breast_cancer
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from tensorflow.keras.models import Sequential, model_from_json
-from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.keras.callbacks import ModelCheckpoint
 
-Form, Window = uic.loadUiType("1.ui")
 
+from PyQt5 import QtWidgets, uic
+from test import Ui_MainWindow
 link = "https://myfin.by/currency/minsk"
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'}
 p = re.compile(r"<td>(.*?)</td>")
 con = sql.connect('main.db')
 
-##Начало
+class mywindow(QtWidgets.QMainWindow):
+    def __init__(self):
+        super(mywindow, self).__init__()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        self.ui.textBrowser.setText("PyScripts")
+        self.ui.listWidget.addItem("PyScripts")
+        self.ui.pushButton.clicked.connect(self.test)
+    def test(self):
+        self.ui.listWidget.clear()
+        a = start()
+        b = "Белинвестбанк:", a[0] , "Нейронная сеть:", a[1], "Альфа-Банк:", a[2] , "Нейронная сеть:", a[3], "Нацбанк:", a[4] , "Нейронная сеть:", a[5]
+        self.ui.textBrowser.setText(str(b))
+        
+        cur = con.cursor()
+        cur.execute("SELECT * FROM `test`")
+        rows = cur.fetchall()
+        for row in rows:
+            if self.ui.checkBox.isChecked():
+                self.ui.listWidget.addItem("Белинвестбанк: "+ str(row[0])+";    Предсказание нейронной сети: "+ str("%.3f" % row[1]))
+            if self.ui.checkBox_2.isChecked():
+                self.ui.listWidget.addItem("Альфа-Банк: "+ str(row[2])+";         Предсказание нейронной сети: "+ str("%.2f" % row[3]))
+            if self.ui.checkBox_3.isChecked():
+                self.ui.listWidget.addItem("Нацбанк: "+str(row[4])+";               Предсказание нейронной сети: "+ str("%.2f" % row[3]))
+                
+          
+        
 
 
 
-self.setupUi(self)
-self.pushButton.clicked.connect(self.test())
-def test(self):
-   print("fgfffffffff")
 
 
 
-app=QtWidgets.QApplication(sys.argv)
-w = Ui()
-w.show()
-app.exec_()
-##общее сохранение
+
+
+
+
+
+
+
+
+
+
+
+
 def save(bel, bel1, alf, alf1, vtb, vtb1, time):
  #print(bel, bel1, alf, alf1, vtb, vtb1, time)
  with con:
@@ -64,7 +84,7 @@ def save(bel, bel1, alf, alf1, vtb, vtb1, time):
   #for row in rows:
   # print(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
 
-##тут загрузка
+
 def load(curs, bank):
 
   x_train0 = np.load('x_train0.npy')
@@ -99,35 +119,36 @@ def load(curs, bank):
   pred = model.predict(np.array([tes]))
   return pred
     
-    
-##Рекурсивно отправляем запросы
-while True:
-# Парсим всю страницу
- full_page = requests.get(link, headers=headers).text
-
-##oup
- soup = BeautifulSoup(full_page, "html.parser")
- price1 = soup.find_all('tr', {'class': 'tr-tb acc-link_14 not_h'})[0]
-##Белинвестбанк
- price11 = re.findall(p, str(price1))[0]
- belb = load(re.findall(p, str(price1))[0], 0)
-
-# soup = BeautifulSoup(full_page, "html.parser")
- price2 = soup.find_all('tr', {'class': 'tr-tb acc-link_6 not_h'})[0]
-#Альфа-Банк
- price22 = re.findall(p, str(price2))[0]
- alfb = load(re.findall(p, str(price2))[0], 3)
-##oup
-
-# soup = BeautifulSoup(full_page, "html.parser")
- price3 = soup.find_all('tr', {'class': 'tr-tb acc-link_8 not_h'})[0]
-#Банк ВТБ
- price33 = re.findall(p, str(price3))[0]
- vtbb = load(re.findall(p, str(price3))[0], 5)
- print(price11, belb[0][0], price22, alfb[0][0], price33, vtbb[0][0])
-##Тут вызываем функцию для сохранения
- save(price11, belb[0][0], price22, alfb[0][0], price33, vtbb[0][0], datetime.datetime.now())
- time.sleep(120)
+def start():    
+  
  
+# Парсим всю страницу
+  full_page = requests.get(link, headers=headers).text
+  soup = BeautifulSoup(full_page, "html.parser")
+  price1 = soup.find_all('tr', {'class': 'tr-tb acc-link_14 not_h'})[0]
+#Белинвестбанк
+  price11 = re.findall(p, str(price1))[0]
+  belb = load(re.findall(p, str(price1))[0], 0)
 
+# soup = BeautifulSoup(full_page, "html.parser")
+  price2 = soup.find_all('tr', {'class': 'tr-tb acc-link_6 not_h'})[0]
+#Альфа-Банк
+  price22 = re.findall(p, str(price2))[0]
+  alfb = load(re.findall(p, str(price2))[0], 3)
+
+ 
+# soup = BeautifulSoup(full_page, "html.parser")
+  price3 = soup.find_all('tr', {'class': 'tr-tb acc-link_8 not_h'})[0]
+#Банк ВТБ
+  price33 = re.findall(p, str(price3))[0]
+  vtbb = load(re.findall(p, str(price3))[0], 5)
+  print(price11, belb[0][0], price22, alfb[0][0], price33, vtbb[0][0])
+  save(price11, belb[0][0], price22, alfb[0][0], price33, vtbb[0][0], datetime.datetime.now())
+
+  return price11, belb[0][0], price22, alfb[0][0], price33, vtbb[0][0]
+ 
+app = QtWidgets.QApplication([])
+application = mywindow()
+application.show()
+sys.exit(app.exec())
 

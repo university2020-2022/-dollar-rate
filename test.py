@@ -55,7 +55,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.checkBox.setText(_translate("MainWindow", "Белинвестбанк"))
         self.checkBox_2.setText(_translate("MainWindow", "Альфа-Банк"))
-        self.checkBox_3.setText(_translate("MainWindow", "Банк ВТБ"))
+        self.checkBox_3.setText(_translate("MainWindow", "Нацбанк"))
         self.textBrowser.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
