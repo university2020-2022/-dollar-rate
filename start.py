@@ -40,11 +40,11 @@ class mywindow(QtWidgets.QMainWindow):
         rows = cur.fetchall()
         for row in rows:
             if self.ui.checkBox.isChecked():
-                self.ui.listWidget.addItem("Белинвестбанк: "+ str(row[0])+";    Предсказание нейронной сети: "+ str("%.3f" % row[1]))
+                self.ui.listWidget.addItem("Белинвестбанк: "+ str(row[0])+";    Прогноз нейронной сети: "+ str("%.3f" % row[1]))
             if self.ui.checkBox_2.isChecked():
-                self.ui.listWidget.addItem("Альфа-Банк: "+ str(row[2])+";         Предсказание нейронной сети: "+ str("%.2f" % row[3]))
+                self.ui.listWidget.addItem("Альфа-Банк: "+ str(row[2])+";         Прогноз нейронной сети: "+ str("%.2f" % row[3]))
             if self.ui.checkBox_3.isChecked():
-                self.ui.listWidget.addItem("Нацбанк: "+str(row[4])+";               Предсказание нейронной сети: "+ str("%.2f" % row[3]))
+                self.ui.listWidget.addItem("Нацбанк: "+str(row[4])+";               Прогноз нейронной сети: "+ str("%.2f" % row[3]))
                 
           
         
