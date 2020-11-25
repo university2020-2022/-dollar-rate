@@ -20,7 +20,8 @@ link = "https://myfin.by/currency/minsk"
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'}
 p = re.compile(r"<td>(.*?)</td>")
 con = sql.connect('main.db')
-
+##Начало
+##Объявляем все необходимое 
 class mywindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(mywindow, self).__init__()
@@ -65,26 +66,31 @@ class mywindow(QtWidgets.QMainWindow):
 
 
 
-
-def save(bel, bel1, alf, alf1, vtb, vtb1, time):
- #print(bel, bel1, alf, alf1, vtb, vtb1, time)
+##Тут сохранение
+def save(bel, bel1, alf, alf1, ncb, ncb1, time):
+ #print(bel, bel1, alf, alf1, ncb, ncb1, time)
  with con:
   cur = con.cursor()
   cur.execute("CREATE TABLE IF NOT EXISTS `test` (`bel` INTEGER, `bel1` INTEGER, `alf` INTEGER, `alf1` INTEGER, `vtb` INTEGER, `vtb1` INTEGER, `time` INTEGER)")
-  #cur.execute(f"INSERT INTO `test` VALUES ('{bel}', '{bel1}', '{alf}', '{alf1}', '{vtb}', '{vtb1}', '{time}')")
+  #cur.execute(f"INSERT INTO `test` VALUES ('{bel}', '{bel1}', '{alf}', '{alf1}', '{ncb}', '{ncb1}', '{time}')")
   cur.execute("SELECT * FROM `test`")
   rows = cur.fetchall()
-  print(rows[-1][0], rows[-1][2], rows[-1][4] , bel, alf, vtb )
-  if float(rows[-1][0]) == float(bel) and float(rows[-1][2]) == float(alf) and float(rows[-1][4]) == float(vtb):
+  print(rows[-1][0], rows[-1][2], rows[-1][4] , bel, alf, ncb )
+  if float(rows[-1][0]) == float(bel) and float(rows[-1][2]) == float(alf) and float(rows[-1][4]) == float(ncb):
       print("ПОВТОР")
   else:
-      cur.execute(f"INSERT INTO `test` VALUES ('{bel}', '{bel1}', '{alf}', '{alf1}', '{vtb}', '{vtb1}', '{time}')")
+      cur.execute(f"INSERT INTO `test` VALUES ('{bel}', '{bel1}', '{alf}', '{alf1}', '{ncb}', '{ncb1}', '{time}')")
       print("СОХРАНИЛИ")
       
   #for row in rows:
   # print(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
 
 
+
+
+
+
+##Реализация загрузки
 def load(curs, bank):
 
   x_train0 = np.load('x_train0.npy')
@@ -118,7 +124,7 @@ def load(curs, bank):
   
   pred = model.predict(np.array([tes]))
   return pred
-    
+##Организация парсинга
 def start():    
   
  
@@ -126,10 +132,10 @@ def start():
   full_page = requests.get(link, headers=headers).text
   soup = BeautifulSoup(full_page, "html.parser")
   price1 = soup.find_all('tr', {'class': 'tr-tb acc-link_14 not_h'})[0]
-#Белинвестбанк
+##Белинвестбанк
   price11 = re.findall(p, str(price1))[0]
   belb = load(re.findall(p, str(price1))[0], 0)
-
+##oup
 # soup = BeautifulSoup(full_page, "html.parser")
   price2 = soup.find_all('tr', {'class': 'tr-tb acc-link_6 not_h'})[0]
 #Альфа-Банк
@@ -146,7 +152,7 @@ def start():
   save(price11, belb[0][0], price22, alfb[0][0], price33, vtbb[0][0], datetime.datetime.now())
 
   return price11, belb[0][0], price22, alfb[0][0], price33, vtbb[0][0]
- 
+##Тут подключаем UI 
 app = QtWidgets.QApplication([])
 application = mywindow()
 application.show()
